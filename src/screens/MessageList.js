@@ -1,47 +1,41 @@
 import React,{useState,useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   StyleSheet,
+  View,
   Text,
   TouchableOpacity,
   FlatList,
-  SafeAreaView
+  SafeAreaView ,
+  Image
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 import {Auth,Db} from '../Config/Config';
 
 export default function MessageList(props) {
+
   const [users, setUsers] = useState({ 
-    userslist: [],
-    id: '',
+      userslist: [],
+      id: '',
   });
 
-  const styles = StyleSheet.create({
-    container:{
-      flex:1,
-      justifyContent:'center',
-      alignItems:'center'
-    },
-  }); 
-  //Get All Users
-  const getAllUser = async() => {
-    const value = await AsyncStorage.getItem('id');
-
-    Db.ref('users').on('value', result => {
-      let data = result.val();
-      if (data !== null) {
-        let allusers = Object.values(data);
-        const filteredUser = allusers.filter(
-            user => user.id !== value,
-        );
-          setUsers({users,userslist:filteredUser});
-      }
-    });
-  };
+  const Profiluser = useSelector(state => state.user.user);
+  const dispatch = useDispatch();
 
   //Action Get All Users
   useEffect( ()=>{
-      getAllUser()
-  },[])
+    if(typeof Profiluser.id !== "undefined"){ 
+      Db.ref('users').on('value', result => {
+        let data = result.val();
+        if (data !== null) {
+          let allusers = Object.values(data);
+          const filteredUser = allusers.filter(
+              users => users.id !== Profiluser.id,
+          );
+          setUsers({users,userslist:filteredUser});
+        }
+      });
+    } 
+  },[Profiluser])
 
   renderRow =({item})=>{
     return(
@@ -49,7 +43,7 @@ export default function MessageList(props) {
         onPress={()=>props.navigation.navigate('Chat',item)}
         style={{padding:10,borderBottomColor:'#ccc',borderBottomWidth:1}}>
         <Text style={{fontSize:20}}>
-            {item.name}
+          {item.name}
         </Text>
       </TouchableOpacity>
     )

@@ -1,21 +1,13 @@
 import firebase from 'firebase';
-import {
-  API_KEY,
-  AUTH_DOMAIN,
-  DATABASE_URL,
-  PROJECT_ID,
-  MESSAGE_SENDER_ID,
-  APP_ID
-} from 'react-native-dotenv'
 
 const firebaseConfig = {
-  apiKey: API_KEY,
-  authDomain: AUTH_DOMAIN,
-  databaseURL: DATABASE_URL,
-  projectId: PROJECT_ID,
+  apiKey: "AIzaSyAon3R6_03iV8DSD4x_zfF3KxdSAPdb1J8",
+  authDomain: "tanya-kabar.firebaseapp.com",
+  databaseURL: "https://tanya-kabar.firebaseio.com",
+  projectId: "tanya-kabar",
   storageBucket: '',
-  messagingSenderId: MESSAGE_SENDER_ID,
-  appId: APP_ID
+  messagingSenderId: "149857011071",
+  appId: "1:149857011071:web:4b13d57dc32dac0a0f464a"
 };
 
 // Initialize Firebase

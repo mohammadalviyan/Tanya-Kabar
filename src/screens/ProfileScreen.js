@@ -1,4 +1,5 @@
 import React,{useState,useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   View,
   Text,
@@ -12,6 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import User from '../../User';
 import firebase from 'firebase'; 
 import AsyncStorage from '@react-native-community/async-storage';
+import { setUserNull } from '../redux/actions/user';
 
 ProfileScreen.navigationOptions={
   title:'Profile'
@@ -19,6 +21,9 @@ ProfileScreen.navigationOptions={
 
 export default function ProfileScreen(props) {
   const [input, setInput]=useState({name:'', job: ''})
+
+  const Profiluser = useSelector(state => state.user.user);
+  const dispatch = useDispatch();
 
   const handleChange=key=>val=>{
     setInput({...input,[key]:val});
@@ -35,87 +40,74 @@ export default function ProfileScreen(props) {
   }
 
   const deleteToken = async () => {
-    await AsyncStorage.clear();
+    dispatch(setUserNull());
     firebase.auth().signOut();
     props.navigation.navigate('Auth')
   }
 
-  useEffect(()=>{
-    const promises = Promise.all([
-      AsyncStorage.getItem('name'),
-      AsyncStorage.getItem('job')
-    ]);
+  return(
+      <SafeAreaView style={styles.container}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={styles.titleBar}>
+                  <TouchableOpacity onPress={deleteToken}>
+                      <Icon name="sign-out-alt" size={24} color="#4E5460" />
+                  </TouchableOpacity>
+              </View>
 
-    promises.then(([name, job]) => {
-      if(name && job){
-        setInput({...input, name, job })
-      }
-    });
-  },[])
+              <View style={{ alignSelf: "center", marginTop: 10 }}>
+                  <View style={styles.profileImage}>
+                      <Image source={require("../assets/image/bg-register.jpg")} style={styles.image}></Image>
+                  </View>
+                  <View style={styles.dm}>
+                      <Icon name="sms" size={18} color="#fff" style={{ marginTop: 2, marginLeft: 2 }} />
+                  </View>
+                  <View style={styles.active}></View>
+                  <View style={styles.add}>
+                      <Icon name="plus" size={32} color="#fff" style={{ marginTop: 4, marginLeft: 2 }} />
+                  </View>
+              </View>
 
-    return(
-        <SafeAreaView style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.titleBar}>
-                    <TouchableOpacity onPress={deleteToken}>
-                        <Icon name="sign-out-alt" size={24} color="#4E5460" />
-                    </TouchableOpacity>
-                </View>
+              <View style={styles.infoContainer}>
+                  <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{Profiluser.name}</Text>
+                  <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{Profiluser.job}</Text>
+              </View>
 
-                <View style={{ alignSelf: "center", marginTop: 10 }}>
-                    <View style={styles.profileImage}>
-                        <Image source={require("../assets/image/bg-register.jpg")} style={styles.image}></Image>
-                    </View>
-                    <View style={styles.dm}>
-                        <Icon name="sms" size={18} color="#fff" style={{ marginTop: 2, marginLeft: 2 }} />
-                    </View>
-                    <View style={styles.active}></View>
-                    <View style={styles.add}>
-                        <Icon name="plus" size={32} color="#fff" style={{ marginTop: 4, marginLeft: 2 }} />
-                    </View>
-                </View>
+              <View style={styles.statsContainer}>
+                  <View style={styles.statsBox}>
+                      <Text style={[styles.text, { fontSize: 24 }]}>483</Text>
+                      <Text style={[styles.text, styles.subText]}>Stars</Text>
+                  </View>
+                  <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
+                      <Text style={[styles.text, { fontSize: 24 }]}>45,844</Text>
+                      <Text style={[styles.text, styles.subText]}>Repositories</Text>
+                  </View>
+                  <View style={styles.statsBox}>
+                      <Text style={[styles.text, { fontSize: 24 }]}>302</Text>
+                      <Text style={[styles.text, styles.subText]}>Followers</Text>
+                  </View>
+              </View>
+              <Text style={[styles.subText, styles.recent]}>Recent Activity</Text>
+              <View style={{ alignItems: "center" }}>
+                  <View style={styles.recentItem}>
+                      <View style={styles.activityIndicator}></View>
+                      <View style={{ width: 250 }}>
+                          <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
+                              Started following <Text style={{ fontWeight: "400" }}>Jake Challeahe</Text> and <Text style={{ fontWeight: "400" }}>Luis Poteer</Text>
+                          </Text>
+                      </View>
+                  </View>
 
-                <View style={styles.infoContainer}>
-                    <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{input.name}</Text>
-                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{input.job}</Text>
-                </View>
-
-                <View style={styles.statsContainer}>
-                    <View style={styles.statsBox}>
-                        <Text style={[styles.text, { fontSize: 24 }]}>483</Text>
-                        <Text style={[styles.text, styles.subText]}>Stars</Text>
-                    </View>
-                    <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
-                        <Text style={[styles.text, { fontSize: 24 }]}>45,844</Text>
-                        <Text style={[styles.text, styles.subText]}>Repositories</Text>
-                    </View>
-                    <View style={styles.statsBox}>
-                        <Text style={[styles.text, { fontSize: 24 }]}>302</Text>
-                        <Text style={[styles.text, styles.subText]}>Followers</Text>
-                    </View>
-                </View>
-                <Text style={[styles.subText, styles.recent]}>Recent Activity</Text>
-                <View style={{ alignItems: "center" }}>
-                    <View style={styles.recentItem}>
-                        <View style={styles.activityIndicator}></View>
-                        <View style={{ width: 250 }}>
-                            <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                Started following <Text style={{ fontWeight: "400" }}>Jake Challeahe</Text> and <Text style={{ fontWeight: "400" }}>Luis Poteer</Text>
-                            </Text>
-                        </View>
-                    </View>
-
-                    <View style={styles.recentItem}>
-                        <View style={styles.activityIndicator}></View>
-                        <View style={{ width: 250 }}>
-                            <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                Started following <Text style={{ fontWeight: "400" }}>Luke Harper</Text>
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+                  <View style={styles.recentItem}>
+                      <View style={styles.activityIndicator}></View>
+                      <View style={{ width: 250 }}>
+                          <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
+                              Started following <Text style={{ fontWeight: "400" }}>Luke Harper</Text>
+                          </Text>
+                      </View>
+                  </View>
+              </View>
+          </ScrollView>
+      </SafeAreaView>
     )
 }
 
