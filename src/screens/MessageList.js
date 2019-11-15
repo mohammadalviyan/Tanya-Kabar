@@ -49,12 +49,17 @@ export default function MessageList(props) {
     )
   }
   return(
-    <SafeAreaView>
-      <FlatList
-        data={users.userslist}
-        renderItem={renderRow}
-        keyExtractor={(item)=>item.id}
-      />
-    </SafeAreaView>
+    <View>
+      <View style={{backgroundColor: '#57BFE6'}}>
+        <Text style={{marginTop: 20,marginBottom: 10, paddingHorizontal: 10, fontSize: 20, color: '#fff'}}>Messages List</Text>
+      </View>
+      <SafeAreaView>
+        <FlatList
+          data={users.userslist}
+          renderItem={renderRow}
+          keyExtractor={(item)=>item.id}
+        />
+      </SafeAreaView>
+    </View>
   )
 }

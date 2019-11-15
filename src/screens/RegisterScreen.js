@@ -73,7 +73,6 @@ export default function RegisterScreen(props) {
           },
           (error) => {
               // See error code charts below.
-              console.log(error.code, error.message);
           },
           { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
       );
@@ -118,7 +117,6 @@ export default function RegisterScreen(props) {
           buttonText: "Okay",
           type: "danger"
         })
-        console.log(error)
       });
   }
 
@@ -130,7 +128,6 @@ export default function RegisterScreen(props) {
             },
             (error) => {
                 // See error code charts below.
-                console.log(error.code, error.message);
             },
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
         );

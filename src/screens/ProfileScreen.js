@@ -11,8 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import User from '../../User';
-import firebase from 'firebase'; 
-import AsyncStorage from '@react-native-community/async-storage';
+import firebase from 'firebase';
 import { setUserNull } from '../redux/actions/user';
 
 ProfileScreen.navigationOptions={
